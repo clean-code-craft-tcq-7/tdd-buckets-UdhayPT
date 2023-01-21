@@ -16,6 +16,16 @@ public class CurrentRange {
 		
 		StringBuilder output = new StringBuilder("Range, Readings");
 		
+		getRangesWithReadings(readings, ranges, start, end);
+
+		for (String range : ranges) {
+			output.append("\n" + range + ", " + Integer.toString(getCountWithRange(readings, range)));
+		}
+		return output;
+	}
+	
+	private static void getRangesWithReadings(int[] readings, List<String> ranges, int start, int end) {
+
 		for (int i = 1; i < readings.length; i++) {
 		    if (readings[i] == readings[i-1] + 1) {
 		        end = readings[i];
@@ -28,14 +38,11 @@ public class CurrentRange {
 		        end = readings[i];
 		    }
 		}
+		
 		ranges.add(start + "-" + end);
-
-		for (String range : ranges) {
-			output.append("\n" + range + ", " + Integer.toString(getCountWithRange(readings, range)));
-		}
-		return output;
+		
 	}
-	
+
 	public static int getCountWithRange(int[] readings, String range) {
 		
 		String[] ranges = range.split("-");
