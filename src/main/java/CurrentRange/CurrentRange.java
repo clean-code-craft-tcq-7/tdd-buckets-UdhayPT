@@ -11,21 +11,33 @@ public class CurrentRange {
 		Arrays.sort(readings);
 		
 		List<String> ranges = new ArrayList<>();
-		int start = readings[0];
-		int end = readings[0];
+		
 		
 		StringBuilder output = new StringBuilder("Range, Readings");
 		
-		getRangesWithReadings(readings, ranges, start, end);
+		getRangesWithReadings(readings, ranges);
 
 		for (String range : ranges) {
 			output.append("\n" + range + ", " + Integer.toString(getCountWithRange(readings, range)));
 		}
+		System.out.println("output" + output);
 		return output;
 	}
 	
-	private static void getRangesWithReadings(int[] readings, List<String> ranges, int start, int end) {
-
+	public static StringBuilder getRangeWiseReadingsAnalogInput(int[] analogReadings) {
+		
+		int[] digitalReadings = new int[analogReadings.length];
+		for (int i = 0; i<analogReadings.length; i++) {
+			digitalReadings[i] = getDigitalConversion((double)analogReadings[i]);
+		}
+		return getRangeWiseReadings(digitalReadings);
+	}
+	
+	public static void getRangesWithReadings(int[] readings, List<String> ranges) {
+		
+		int start = readings[0];
+		int end = readings[0];
+		
 		for (int i = 1; i < readings.length; i++) {
 		    if (readings[i] == readings[i-1] + 1) {
 		        end = readings[i];
@@ -60,5 +72,15 @@ public class CurrentRange {
 
         return count;
     }
+	
+	public static int getDigitalConversion(double analogData) {
+		int digitalRate = 0;
+		
+		if (analogData > 4094) {
+			return -1;
+		}	
+		digitalRate = (int) Math.round(analogData * 10 / 4094);
+		return digitalRate;
+	}
 
 }
